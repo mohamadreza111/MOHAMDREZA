@@ -5,7 +5,7 @@ class Ui_loginMainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         
-        
+        self.resize(900,600)
         self.centralwidget = QtWidgets.QWidget()
         self.centralwidget.setObjectName("centralwidget")
         self.lineEdit = QtWidgets.QLineEdit(parent=self.centralwidget)
@@ -127,24 +127,43 @@ class Ui_singupMainWindow(QtWidgets.QWidget):
         name=self.lineEdit.text()
         password=self.lineEdit_2.text()
         repassword=self.lineEdit_3.text()
-        if password==repassword:
-            file=open(r"C:\Users\Hp\Desktop\test311\result.json" , mode='r' )
-            a=json.load(file)
-            file.close()
 
 
 
+        if name!="" and password!="":
 
-            data={"Username":name,
-                "password":password
+
                 
-            }
-            a.append(data)
+         if password==repassword:
+                
+                file=open(r"C:\Users\Hp\Desktop\test311\result.json" , mode='r' )
 
-            with open( r"C:\Users\Hp\Desktop\test311\result.json",'w') as file:
-                json.dump(a,file)
+                a=json.load(file)
+                
+                file.close()
+                
+                is_find=False
+                for i in a:
+                    if name==i["Username"]:
+                        is_find=True
+                        break
 
-        
+                if is_find==False:
+                    
+
+
+
+
+                    data={"Username":name,
+                        "password":password
+                        
+                    }
+                    a.append(data)
+
+                    with open( r"C:\Users\Hp\Desktop\test311\result.json",'w') as file:
+                        json.dump(a,file)
+                        self.close()
+                
 
 
 class dashbord(QtWidgets.QWidget):
