@@ -1,6 +1,6 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
 import json
-
+login_user=None
 class Ui_loginMainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
@@ -55,7 +55,7 @@ class Ui_loginMainWindow(QtWidgets.QMainWindow):
         name=self.lineEdit.text()
         password=self.lineEdit_2.text()
     
-        file=open(r"C:\Users\Hp\Desktop\test311\result.json" , mode='r')
+        file=open(r"C:\Users\Hp\Desktop\Mohamadrez\result.json" , mode='r')
         save_data=json.load(file)
          
         file.close()
@@ -63,9 +63,14 @@ class Ui_loginMainWindow(QtWidgets.QMainWindow):
          
         for i in save_data:
              if i["Username"]== name and    i["password"]== password:
+                global login_user
+                login_user=name
+
                 if self.x is None:
                     self.x =dashbord()
                     self.x.show()
+                self.x.change_user_label()
+                self.x.show()
                 
              else:
               
@@ -167,7 +172,109 @@ class Ui_singupMainWindow(QtWidgets.QWidget):
 
 
 class dashbord(QtWidgets.QWidget):
-    pass
+    def __init__(self):
+        super().__init__()
+        centralwidget=QtWidgets.QVBoxLayout()
+
+        self.lbl_username=QtWidgets.QLabel()
+        self.lbl_username.setObjectName("lbl_username")
+        self.change_user_label()
+        self.resetpassword=QtWidgets.QPushButton()
+        self.resetpassword.setObjectName("resetpassword")
+        self.resetpassword.clicked.connect(self.reset_password_open)
+
+        self.resetpassword.setText("resetpassword")
+        centralwidget.addWidget(self.resetpassword)
+
+
+
+        centralwidget.addWidget(self.lbl_username)
+
+        self.setLayout(centralwidget)
+
+        self.show_reset_pass_page=None
+    def change_user_label(self):
+        global login_user
+        self.lbl_username.setText("welcome"+login_user)
+
+
+    def reset_password_open(self):
+        if self.show_reset_pass_page is None:
+            self.show_reset_pass_page=Reset_Password()
+
+        self.show_reset_pass_page.show()
+
+
+
+class Reset_Password(QtWidgets.QWidget): 
+    def __init__(self): 
+        super().__init__() 
+        centeralwidget = QtWidgets.QVBoxLayout() 
+        self.pushButton = QtWidgets.QPushButton() 
+        self.pushButton.setGeometry(QtCore.QRect(100, 270, 151, 51)) 
+        self.pushButton.setObjectName("pushButton") 
+        self.UserName = QtWidgets.QLineEdit() 
+        self.UserName.setEnabled(True) 
+        self.UserName.setGeometry(QtCore.QRect(10, 60, 321, 31)) 
+        self.UserName.setObjectName("UserName") 
+        self.UserName.setPlaceholderText("Write Your User Name") 
+        self.label = QtWidgets.QLabel() 
+        self.label.setGeometry(QtCore.QRect(60, 9, 221, 31)) 
+        self.label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter) 
+        self.label.setObjectName("label") 
+        self.Password = QtWidgets.QLineEdit() 
+        self.Password.setEnabled(True) 
+        self.Password.setGeometry(QtCore.QRect(10, 130, 321, 31)) 
+        self.Password.setEchoMode(QtWidgets.QLineEdit.EchoMode.Normal) 
+        self.Password.setObjectName("Password") 
+        self.Password.setPlaceholderText("Write Password") 
+        self.RePassword = QtWidgets.QLineEdit() 
+        self.RePassword.setEnabled(True) 
+        self.RePassword.setGeometry(QtCore.QRect(10, 200, 321, 31)) 
+        self.RePassword.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password) 
+        self.RePassword.setObjectName("RePassword") 
+        self.RePassword.setPlaceholderText("Write Password Again") 
+        self.label = QtWidgets.QLabel() 
+        self.label.setGeometry(QtCore.QRect(60, 9, 221, 31)) 
+        self.label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter) 
+        self.label.setObjectName("label") 
+        self.pushButton.clicked.connect(self.reset_password)
+        self.pushButton.setText("Sign-Up") 
+        self.label.setText( "WELLCOME") 
+        centeralwidget.addWidget(self.label) 
+        centeralwidget.addWidget(self.UserName) 
+        centeralwidget.addWidget(self.Password) 
+        centeralwidget.addWidget(self.RePassword) 
+        centeralwidget.addWidget(self.pushButton) 
+        self.setLayout(centeralwidget) 
+
+    def reset_password(self):
+        global login_user
+        old_passwd=self.txt_old_passwd.text()
+        new_passwd=self.txt_new_passwd.text()
+        new_repasswd=self.txt.new_repasswd.text()
+
+        if old_passwd !="" and new_passwd != "":
+            if new_passwd==new_repasswd:
+
+                file=open(r"C:\Users\Hp\Desktop\Mohamadrez\result.json" , mode='r' )
+
+            a=json.load(file)
+            file.close()
+
+            for i in a:
+                if old_passwd==i["password"] and login_user==i["username"]:
+                    i["password"]=new_passwd
+                    break
+
+            file=open(r"C:\Users\Hp\Desktop\Mohamadrez\result.json" , mode='w' )
+
+            json.dump(a,file)
+            file.close()
+
+
+
+    
 
 import sys
 app = QtWidgets.QApplication(sys.argv)
