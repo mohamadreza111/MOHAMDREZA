@@ -1,5 +1,6 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
 import json
+import hashlib
 login_user=None
 class Ui_loginMainWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -62,7 +63,8 @@ class Ui_loginMainWindow(QtWidgets.QMainWindow):
 
          
         for i in save_data:
-             if i["Username"]== name and    i["password"]== password:
+             if i["Username"]== name and    i["password"]==hashlib.sha256(password.encode("utf-8")).hexdigest():
+
                 global login_user
                 login_user=name
 
@@ -137,15 +139,16 @@ class Ui_singupMainWindow(QtWidgets.QWidget):
 
         if name!="" and password!="":
 
+            if len(password)>=8:
+                if'@' in password and '!' in password and '#' in password:
+                
+                    if password==repassword:
+                
+                       file=open(r"C:\Users\Hp\Desktop\Mohamadrez\result.json" , mode='r' )
 
+                    a=json.load(file)
                 
-         if password==repassword:
-                
-                file=open(r"C:\Users\Hp\Desktop\test311\result.json" , mode='r' )
-
-                a=json.load(file)
-                
-                file.close()
+                    file.close()
                 
                 is_find=False
                 for i in a:
@@ -160,14 +163,18 @@ class Ui_singupMainWindow(QtWidgets.QWidget):
 
 
                     data={"Username":name,
-                        "password":password
+                        "password":hashlib.sha256(password.encode("utf-8")).hexdigest()
                         
                     }
                     a.append(data)
 
-                    with open( r"C:\Users\Hp\Desktop\test311\result.json",'w') as file:
+                    with open( r"C:\Users\Hp\Desktop\Mohamadrez\result.json",'w') as file:
                         json.dump(a,file)
                         self.close()
+                
+
+
+
                 
 
 
@@ -253,22 +260,22 @@ class Reset_Password(QtWidgets.QWidget):
         old_passwd=self.txt_old_passwd.text()
         new_passwd=self.txt_new_passwd.text()
         new_repasswd=self.txt.new_repasswd.text()
+        if "@" in new_passwd and '!' in new_passwd and "#" in new_passwd:
+            if old_passwd !="" and new_passwd != "":
+                if new_passwd==new_repasswd:
 
-        if old_passwd !="" and new_passwd != "":
-            if new_passwd==new_repasswd:
+                    file=open(r"C:\Users\Hp\Desktop\Mohamadrez\result.json" , mode='r' )
 
-                file=open(r"C:\Users\Hp\Desktop\Mohamadrez\result.json" , mode='r' )
-
-            a=json.load(file)
-            file.close()
+                    a=json.load(file)
+                    file.close()
 
             for i in a:
-                if old_passwd==i["password"] and login_user==i["username"]:
-                    i["password"]=new_passwd
+                if hashlib.sha256(old_passwd.encode("utf-8")).hexdigest()==i["password"] and login_user==i["username"]:
+                    i["password"]=hashlib.sha256(new_passwd.encode("utf-8")).hexdigest()
                     break
 
-            file=open(r"C:\Users\Hp\Desktop\Mohamadrez\result.json" , mode='w' )
-
+            file=open(r"C:\Users\Hp\Desktop\Mohamadrez\result.json" , mode="w" )
+            
             json.dump(a,file)
             file.close()
 
