@@ -182,6 +182,22 @@ class dashbord(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         centralwidget=QtWidgets.QVBoxLayout()
+        self.lineEdit = QtWidgets.QLineEdit()
+        self.lineEdit.setGeometry(QtCore.QRect(200, 50, 331, 22))
+        self.lineEdit.setObjectName("lineEdit")
+        self.lineEdit_2 = QtWidgets.QLineEdit()
+        self.lineEdit_2.setGeometry(QtCore.QRect(200, 50, 331, 22))
+        self.lineEdit_2.setObjectName("lineEdit_2")
+        self.btn_password=QtWidgets.QPushButton()
+        self.btn_password.setObjectName("btn_password")
+        self.btn_password.clicked.connect(self.save_password)
+
+        self.btn_password.setText("password")
+        centralwidget.addWidget(self.lineEdit)
+        centralwidget.addWidget(self.lineEdit_2)
+        centralwidget.addWidget(self.btn_password)
+        
+        
 
         self.lbl_username=QtWidgets.QLabel()
         self.lbl_username.setObjectName("lbl_username")
@@ -210,6 +226,30 @@ class dashbord(QtWidgets.QWidget):
             self.show_reset_pass_page=Reset_Password()
 
         self.show_reset_pass_page.show()
+
+    def save_password(self):
+                    global login_user
+                    name=self.lineEdit.text()
+                    password=self.lineEdit_2.text()
+                    if len(name)>0 and len(password)>0:
+                            file=open(r"C:\Users\Hp\Desktop\Mohamadrez\password.json" , mode='r' )
+
+                            a=json.load(file)
+                        
+                            file.close()
+
+                
+                            data={"Username":login_user,
+                                    "name":name,
+                                "password":hashlib.sha256(password.encode("utf-8")).hexdigest()
+                                
+                                }
+                            a.append(data)
+
+                            with open( r"C:\Users\Hp\Desktop\Mohamadrez\password.json",'w') as file:
+                                    json.dump(a,file)
+                                #self.close()
+                
 
 
 
