@@ -189,13 +189,16 @@ class dashbord(QtWidgets.QWidget):
         self.lineEdit_2.setGeometry(QtCore.QRect(200, 50, 331, 22))
         self.lineEdit_2.setObjectName("lineEdit_2")
         self.btn_password=QtWidgets.QPushButton()
+        self.show_pass=QtWidgets.QPushButton()
         self.btn_password.setObjectName("btn_password")
+        self.show_pass.setObjectName("show_pass")
         self.btn_password.clicked.connect(self.save_password)
-
+        self.show_pass.clicked.connect(self.show_password)
         self.btn_password.setText("password")
         centralwidget.addWidget(self.lineEdit)
         centralwidget.addWidget(self.lineEdit_2)
         centralwidget.addWidget(self.btn_password)
+        centralwidget.addWidget(self.show_pass)
         
         
 
@@ -214,12 +217,17 @@ class dashbord(QtWidgets.QWidget):
         centralwidget.addWidget(self.lbl_username)
 
         self.setLayout(centralwidget)
+        self.y=None
 
         self.show_reset_pass_page=None
     def change_user_label(self):
         global login_user
         self.lbl_username.setText("welcome"+login_user)
-
+    
+    def show_password(self):
+       if self.y is None:
+           self.y= list_password()
+       self.y.show()
 
     def reset_password_open(self):
         if self.show_reset_pass_page is None:
@@ -320,6 +328,12 @@ class Reset_Password(QtWidgets.QWidget):
             file.close()
 
 
+class list_password(QtWidgets.QWidget):
+     def __init__(self): 
+        super().__init__() 
+        centeralwidget = QtWidgets.QVBoxLayout() 
+        self.lbl.all_passw=QtWidgets.QLabel()
+        
 
     
 
